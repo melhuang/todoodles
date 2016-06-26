@@ -27,4 +27,14 @@
         android:layout_below="@+id/etEditItem"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/btnDelete"
+        android:onClick="onDelete"
+        android:layout_below="@+id/etEditItem"
+        android:layout_toRightOf="@+id/btnSave"
+        android:layout_toEndOf="@+id/btnSave" />
 </RelativeLayout>

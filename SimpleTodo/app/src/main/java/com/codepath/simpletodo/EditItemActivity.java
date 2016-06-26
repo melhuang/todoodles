@@ -38,6 +38,17 @@ public class EditItemActivity extends Activity {
         this.finish();
     }
 
+    public void onDelete(View v) {
+        EditText etNewItem = (EditText) findViewById(R.id.etEditItem);
+        String newItem = etNewItem.getText().toString();
+        Intent data = new Intent();
+        data.putExtra("delete", true);
+        data.putExtra("code", 10);
+        data.putExtra("position", position);
+        setResult(RESULT_OK, data);
+        this.finish();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

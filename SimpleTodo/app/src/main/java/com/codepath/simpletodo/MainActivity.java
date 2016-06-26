@@ -1,11 +1,13 @@
 package com.codepath.simpletodo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -17,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,8 +36,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
+        lvItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         readItems();
-        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
     }
@@ -45,9 +49,8 @@ public class MainActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter,
                                            View item, int pos, long id) {
-                items.remove(pos);
-                itemsAdapter.notifyDataSetChanged();
-                writeItems();
+                // the ArrayList items backs the list view, so fetch directly from the data structure
+                launchEditView(items.get(pos), pos);
                 return true;
             }
 
@@ -58,9 +61,6 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                // the ArrayList items backs the list view, so fetch directly from the data structure
-                String itemInList = items.get(position);
-                launchEditView(itemInList, position);
             }
         });
     }
@@ -75,14 +75,28 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            String newText = data.getExtras().getString("text");
             int position = data.getExtras().getInt("position");
-            updateItem(newText, position);
+            if (data.hasExtra("delete")) {
+                deleteItem(position);
+            } else {
+                String newText = data.getExtras().getString("text");
+                updateItem(newText, position);
+            }
         }
     }
 
+    private void deleteItem(int position) {
+        items.remove(position);
+        itemsAdapter.notifyDataSetChanged();
+        writeItems();
+    }
+
     public void updateItem(String newText, int position) {
-        items.set(position, newText);
+        if (position >= items.size()) {
+            items.add(newText); // add to end of list
+        } else {
+            items.set(position, newText);
+        }
         itemsAdapter.notifyDataSetChanged();
         writeItems();
     }
@@ -100,18 +114,11 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            launchEditView("", items.size());
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onAddItem(View v) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
-        etNewItem.setText("");
-        writeItems();
     }
 
     private void readItems() {
@@ -134,3 +141,23 @@ public class MainActivity extends Activity {
         }
     }
 }
+
+enum Priority {
+    HIGH, MEDIUM, LOW
+}
+
+class TodoItem {
+    String title;
+    Date dueDate;
+    Priority priority;
+    boolean completed;
+
+    TodoItem(String title, Date dueDate, Priority priority, boolean completed) {
+        this.title = title;
+        this.dueDate = dueDate;
+        this.priority = priority;
+        this.completed = completed;
+    }
+
+}
+
