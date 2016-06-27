@@ -26,15 +26,15 @@ public class ItemsAdapter extends ArrayAdapter<TodoItem> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
         }
         // Lookup view for data population
-        ImageView priorityBar = (ImageView) convertView.findViewById(R.id.priorityBar)
+        ImageView priorityBar = (ImageView) convertView.findViewById(R.id.priorityBar);
         TextView itemTitle = (TextView) convertView.findViewById(R.id.itemTitle);
         TextView itemDueDate = (TextView) convertView.findViewById(R.id.itemDueDate);
         CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.checkBox);
         // Populate the data into the template view using the data object
-        priorityBar.setBackgroundColor(colorForPriority(item.priority));
+//        priorityBar.setBackgroundColor(colorForPriority(item.priority));
         itemTitle.setText(item.title);
-        itemDueDate.setText(item.dueDate.toString());
-        checkbox.setChecked(item.completed);
+//        itemDueDate.setText(item.dueDate.toString());
+//        checkbox.setChecked(item.completed);
         // Return the completed view to render on screen
         return convertView;
     }

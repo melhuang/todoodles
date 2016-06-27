@@ -26,7 +26,7 @@ import java.util.List;
 public class MainActivity extends Activity {
 
     ArrayList<String> items;
-    ArrayAdapter<String> itemsAdapter;
+    ItemsAdapter itemsAdapter;
     ListView lvItems;
 
     private final int REQUEST_CODE = 10;
@@ -38,7 +38,11 @@ public class MainActivity extends Activity {
         lvItems = (ListView)findViewById(R.id.lvItems);
         lvItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         readItems();
-        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked, items);
+        ArrayList<TodoItem> itemList = new ArrayList<TodoItem>();
+        for(String item : items) {
+            itemList.add(new TodoItem(item));
+        }
+        itemsAdapter = new ItemsAdapter(this, itemList);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
     }
@@ -53,7 +57,6 @@ public class MainActivity extends Activity {
                 launchEditView(items.get(pos), pos);
                 return true;
             }
-
                 }
         );
 
@@ -144,20 +147,5 @@ public class MainActivity extends Activity {
 
 enum Priority {
     HIGH, MEDIUM, LOW
-}
-
-class TodoItem {
-    String title;
-    Date dueDate;
-    Priority priority;
-    boolean completed;
-
-    TodoItem(String title, Date dueDate, Priority priority, boolean completed) {
-        this.title = title;
-        this.dueDate = dueDate;
-        this.priority = priority;
-        this.completed = completed;
-    }
-
 }
 
