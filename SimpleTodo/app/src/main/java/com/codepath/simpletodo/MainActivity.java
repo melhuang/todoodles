@@ -57,8 +57,7 @@ public class MainActivity extends Activity {
                 launchEditView(itemList.get(pos), pos);
                 return true;
             }
-                }
-        );
+        });
 
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -91,9 +90,9 @@ public class MainActivity extends Activity {
     }
 
     private void deleteItem(int position) {
+        databaseHelper.deleteItem(itemList.get(position).title);
         itemList.remove(position);
         itemsAdapter.notifyDataSetChanged();
-        databaseHelper.deleteItem(itemList.get(position).title);
     }
 
     public void updateItem(TodoItem item, int position) {

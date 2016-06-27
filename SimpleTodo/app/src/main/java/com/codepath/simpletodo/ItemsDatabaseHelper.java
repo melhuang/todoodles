@@ -187,8 +187,14 @@ public class ItemsDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean deleteItem(String title) {
-        SQLiteDatabase db = getWritableDatabase();
-        return db.delete(TABLE_ITEMS, KEY_ITEM_TITLE + "=" + title, null) > 0;
+    public void deleteItem(String title) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.delete(TABLE_ITEMS, KEY_ITEM_TITLE + " = ?", new String[] { title });
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
     }
 }
