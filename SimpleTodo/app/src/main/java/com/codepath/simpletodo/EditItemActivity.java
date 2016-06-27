@@ -56,6 +56,7 @@ public class EditItemActivity extends Activity {
         NumberPicker numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
         item.dueDate = getCalendar(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
         item.priority = Priority.values()[numberPicker.getValue()];
+
         Intent data = new Intent();
         Bundle b = new Bundle();
         b.putSerializable("item", item);
@@ -63,6 +64,7 @@ public class EditItemActivity extends Activity {
         data.putExtra("code", 10);
         data.putExtra("position", position);
         setResult(RESULT_OK, data);
+
         this.finish();
     }
 

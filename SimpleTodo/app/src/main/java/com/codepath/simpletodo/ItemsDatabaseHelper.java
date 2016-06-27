@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class ItemsDatabaseHelper extends SQLiteOpenHelper {
         String CREATE_ITEMS_TABLE = "CREATE TABLE " + TABLE_ITEMS +
                 "(" +
                 KEY_ITEM_TITLE + " TEXT," +
-                KEY_ITEM_DUE_DATE + " TEXT," +
+                KEY_ITEM_DUE_DATE + " INTEGER," +
                 KEY_ITEM_PRIORITY + " TEXT," +
                 KEY_ITEM_COMPLETED + " INTEGER" +
                 ")";
@@ -99,7 +100,7 @@ public class ItemsDatabaseHelper extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put(KEY_ITEM_TITLE, item.title);
-            values.put(KEY_ITEM_DUE_DATE, item.dueDate.toString());
+            values.put(KEY_ITEM_DUE_DATE, item.dueDate.getTimeInMillis());
             values.put(KEY_ITEM_PRIORITY, item.priority.toString());
             values.put(KEY_ITEM_COMPLETED, item.completed);
 
@@ -152,14 +153,9 @@ public class ItemsDatabaseHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     String dateString = cursor.getString(cursor.getColumnIndex(KEY_ITEM_DUE_DATE));
-                    Date date = new Date();
-                    DateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    try {
-                        date = iso8601Format.parse(dateString);
-                    } catch (ParseException e) {
-                        Log.e(TAG, "Parsing ISO8601 datetime failed", e);
-                    }
-                    TodoItem newItem = new TodoItem(,
+                    Calendar date = Calendar.getInstance();
+                    date.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_ITEM_DUE_DATE)));
+                    TodoItem newItem = new TodoItem(
                             cursor.getString(cursor.getColumnIndex(KEY_ITEM_TITLE)),
                             date,
                             Priority.valueOf(cursor.getString(cursor.getColumnIndex(KEY_ITEM_PRIORITY))),

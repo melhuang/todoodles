@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
             if (data.hasExtra("delete")) {
                 deleteItem(position);
             } else {
-                TodoItem item = (TodoItem) getIntent().getExtras().getSerializable("item");
+                TodoItem item = (TodoItem) data.getExtras().getSerializable("item");
                 updateItem(item, position);
             }
         }

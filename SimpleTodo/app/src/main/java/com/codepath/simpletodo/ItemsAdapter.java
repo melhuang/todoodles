@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ItemsAdapter extends ArrayAdapter<TodoItem> {
@@ -31,10 +32,11 @@ public class ItemsAdapter extends ArrayAdapter<TodoItem> {
         TextView itemDueDate = (TextView) convertView.findViewById(R.id.itemDueDate);
         CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.checkBox);
         // Populate the data into the template view using the data object
-//        priorityBar.setBackgroundColor(colorForPriority(item.priority));
+        priorityBar.setBackgroundColor(colorForPriority(item.priority));
         itemTitle.setText(item.title);
-//        itemDueDate.setText(item.dueDate.toString());
-//        checkbox.setChecked(item.completed);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        itemDueDate.setText(format1.format(item.dueDate.getTime()));
+        checkbox.setChecked(item.completed);
         // Return the completed view to render on screen
         return convertView;
     }
