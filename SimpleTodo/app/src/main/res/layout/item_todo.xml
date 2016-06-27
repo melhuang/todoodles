@@ -8,13 +8,17 @@
     <ImageView
         android:id="@+id/priorityBar"
         android:layout_alignParentLeft="true"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"/>
+        android:layout_width="8dp"
+        android:layout_height="45dp"/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/priorityBar"
+        android:layout_toEndOf="@+id/priorityBar">
 
         <TextView
             android:id="@+id/itemTitle"

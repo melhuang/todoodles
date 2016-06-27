@@ -50,7 +50,7 @@ public class ItemsAdapter extends ArrayAdapter<TodoItem> {
             case LOW:
                 return Color.parseColor("#77dd77");
             default:
-                return Color.parseColor("#ffffff");
+                return Color.parseColor("#77dd77");
         }
     }
 
