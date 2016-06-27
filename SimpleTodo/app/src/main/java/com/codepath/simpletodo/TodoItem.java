@@ -1,18 +1,19 @@
 package com.codepath.simpletodo;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Created by melissahuang on 6/26/16.
  */
 
-public class TodoItem {
+public class TodoItem implements Serializable {
     String title;
-    Date dueDate;
+    Calendar dueDate;
     Priority priority;
     boolean completed;
 
-    TodoItem(String title, Date dueDate, Priority priority, boolean completed) {
+    TodoItem(String title, Calendar dueDate, Priority priority, boolean completed) {
         this.title = title;
         this.dueDate = dueDate;
         this.priority = priority;

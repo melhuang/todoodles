@@ -19,15 +19,18 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 
 public class MainActivity extends Activity {
 
+    ArrayList<TodoItem> itemList;
     ArrayList<String> items;
     ItemsAdapter itemsAdapter;
     ListView lvItems;
+    ItemsDatabaseHelper databaseHelper;
 
     private final int REQUEST_CODE = 10;
 
@@ -37,11 +40,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
         lvItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        databaseHelper = ItemsDatabaseHelper.getInstance(this);
         readItems();
-        ArrayList<TodoItem> itemList = new ArrayList<TodoItem>();
-        for(String item : items) {
-            itemList.add(new TodoItem(item));
-        }
         itemsAdapter = new ItemsAdapter(this, itemList);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> adapter,
                                            View item, int pos, long id) {
                 // the ArrayList items backs the list view, so fetch directly from the data structure
-                launchEditView(items.get(pos), pos);
+                launchEditView(itemList.get(pos), pos);
                 return true;
             }
                 }
@@ -68,9 +68,11 @@ public class MainActivity extends Activity {
         });
     }
 
-    public void launchEditView(String item, int position) {
+    public void launchEditView(TodoItem item, int position) {
         Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-        i.putExtra("text", item);
+        Bundle b = new Bundle();
+        b.putSerializable("item", item);
+        i.putExtras(b);
         i.putExtra("position", position);
         startActivityForResult(i, REQUEST_CODE);
     }
@@ -82,26 +84,26 @@ public class MainActivity extends Activity {
             if (data.hasExtra("delete")) {
                 deleteItem(position);
             } else {
-                String newText = data.getExtras().getString("text");
-                updateItem(newText, position);
+                TodoItem item = (TodoItem) getIntent().getExtras().getSerializable("item");
+                updateItem(item, position);
             }
         }
     }
 
     private void deleteItem(int position) {
-        items.remove(position);
+        itemList.remove(position);
         itemsAdapter.notifyDataSetChanged();
-        writeItems();
+        databaseHelper.deleteItem(itemList.get(position).title);
     }
 
-    public void updateItem(String newText, int position) {
-        if (position >= items.size()) {
-            items.add(newText); // add to end of list
+    public void updateItem(TodoItem item, int position) {
+        if (position >= itemList.size()) {
+            itemList.add(item); // add to end of list
         } else {
-            items.set(position, newText);
+            itemList.set(position, item);
         }
         itemsAdapter.notifyDataSetChanged();
-        writeItems();
+        databaseHelper.addOrUpdateItem(item);
     }
 
     @Override
@@ -118,30 +120,15 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_add) {
-            launchEditView("", items.size());
+            TodoItem newItem = new TodoItem("", Calendar.getInstance(), Priority.MEDIUM, false);
+            launchEditView(newItem, itemList.size());
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void readItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            items = new ArrayList<String>();
-        }
-    }
-
-    private void writeItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(todoFile, items);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        itemList = databaseHelper.getAllItems();
     }
 }
 

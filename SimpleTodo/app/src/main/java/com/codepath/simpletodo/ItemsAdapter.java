@@ -46,7 +46,9 @@ public class ItemsAdapter extends ArrayAdapter<TodoItem> {
             case MEDIUM:
                 return Color.parseColor("#fdfd96");
             case LOW:
-                return Color.parseColor("#77dd77 ");
+                return Color.parseColor("#77dd77");
+            default:
+                return Color.parseColor("#ffffff");
         }
     }
 

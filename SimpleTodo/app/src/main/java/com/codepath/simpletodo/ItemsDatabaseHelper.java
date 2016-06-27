@@ -136,8 +136,8 @@ public class ItemsDatabaseHelper extends SQLiteOpenHelper {
         return itemId;
     }
 
-    public List<TodoItem> getAllItems() {
-        List<TodoItem> items = new ArrayList<TodoItem>();
+    public ArrayList<TodoItem> getAllItems() {
+        ArrayList<TodoItem> items = new ArrayList<TodoItem>();
 
         // SELECT * FROM ITEMS
         String ITEMS_SELECT_QUERY =
@@ -191,7 +191,8 @@ public class ItemsDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean deleteItem(int id) {
-
+    public boolean deleteItem(String title) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(TABLE_ITEMS, KEY_ITEM_TITLE + "=" + title, null) > 0;
     }
 }

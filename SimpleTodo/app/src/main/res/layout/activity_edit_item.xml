@@ -37,4 +37,21 @@
         android:layout_below="@+id/etEditItem"
         android:layout_toRightOf="@+id/btnSave"
         android:layout_toEndOf="@+id/btnSave" />
+
+    <DatePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/datePicker"
+        android:layout_below="@+id/btnSave"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker"
+        android:layout_below="@+id/datePicker"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
